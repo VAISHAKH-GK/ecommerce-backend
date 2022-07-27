@@ -1,2 +1,2 @@
 # ecommerce-backend
-Backend mafe for E-commerce website using GO
+Backend made for E-commerce website using GO
