@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -22,8 +21,8 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	password, err := json.Marshal(data["password"])
 	checkNilErr(err)
 	hash, err := bcrypt.GenerateFromPassword(password, bcrypt.DefaultCost)
-	var hashedPassword = string(hash)
 	checkNilErr(err)
+	var hashedPassword = string(hash)
 	data["password"] = hashedPassword
 	response, err := db.Collection("user").InsertOne(ctx, data)
 	checkNilErr(err)
@@ -39,14 +38,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	var user map[string]interface{}
 	err = json.Unmarshal(body, &data)
 	db.Collection("user").FindOne(ctx, bson.M{"email": data["email"]}).Decode(&user)
-	var hashedPassword = fmt.Sprint(user["password"])
+	var hashedPassword = user["password"].(string)
 	password, err := json.Marshal(data["password"])
 	checkNilErr(err)
 	err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), password)
-	checkNilErr(err)
 	var details map[string]interface{}
 	if err == nil {
 		details = map[string]interface{}{"status": true}
+		res, err := json.Marshal(details)
+		checkNilErr(err)
+		w.Write(res)
+	} else {
+		details = map[string]interface{}{"status": false, "reason": err}
 		res, err := json.Marshal(details)
 		checkNilErr(err)
 		w.Write(res)
