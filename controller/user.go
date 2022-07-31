@@ -49,7 +49,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		checkNilErr(err)
 		w.Write(res)
 	} else {
-		details = map[string]interface{}{"status": false, "reason": err}
+		details = map[string]interface{}{"status": false, "reason": "Wrong Password"}
 		res, err := json.Marshal(details)
 		checkNilErr(err)
 		w.Write(res)
