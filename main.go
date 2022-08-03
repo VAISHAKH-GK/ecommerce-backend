@@ -11,6 +11,9 @@ import (
 func main() {
 	const port = ":9000"
 
+  // starting http server
 	http.ListenAndServe(port, cors.AllowAll().Handler(router.Router()))
-	model.Client.Disconnect(model.Ctx)
+  
+  // disconnecting from mongodb
+	defer model.Client.Disconnect(model.Ctx)
 }
