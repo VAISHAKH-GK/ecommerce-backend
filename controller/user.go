@@ -15,8 +15,8 @@ var ctx = model.Ctx
 func UserSignUpRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = ioutil.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
-	var id = helpers.DoUserSignUp(body)
-	w.Write(id)
+	var res = helpers.DoUserSignUp(body)
+	w.Write(res)
 }
 
 // post request on /api/user/login

@@ -10,9 +10,14 @@ var ctx = model.Ctx
 func DoUserSignUp(body []byte) []byte {
 	var data map[string]interface{}
 	DecodeJson(body, &data)
+	var emailAvailble = CheckIsEmailAvailble(data["email"].(string))
+	if !emailAvailble["status"].(bool) {
+		var res = EncodeJson(emailAvailble)
+		return res
+	}
 	data["password"] = hashPassword(data["password"])
 	var insertedID = insertUser(data)
-	var encodedInsertedID = EncodeJson(insertedID)
+	var encodedInsertedID = EncodeJson(map[string]interface{}{"status": true, "reason": insertedID})
 	return encodedInsertedID
 }
 
