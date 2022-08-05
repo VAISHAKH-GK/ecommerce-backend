@@ -5,26 +5,30 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func CheckIsEmailAvailble(email string) map[string]interface{} {
+// checking is email is availble
+func IsEmailAvailble(email string) bool {
 	var user map[string]interface{}
+  // finding user with email if exists
 	db.Collection("user").FindOne(ctx, bson.M{"email": email}).Decode(&user)
 	if user != nil {
-		var res = map[string]interface{}{"status": false, "reason": "email in use"}
-		return res
+		return false
 	} else {
-		var res = map[string]interface{}{"status": true}
-		return res
+		return true
 	}
 }
 
+// hashing password
 func hashPassword(pass interface{}) string {
 	var password = pass.(string)
+  // generating hash
 	var hash, err = bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	CheckNilErr(err)
+  // converting hash to string
 	var hashedPassword = string(hash)
 	return hashedPassword
 }
 
+// inserting user into database
 func insertUser(user any) interface{} {
 	var response, err = db.Collection("user").InsertOne(ctx, user)
 	CheckNilErr(err)

@@ -1,4 +1,4 @@
-package model
+package databaseConnection
 
 import (
 	"context"

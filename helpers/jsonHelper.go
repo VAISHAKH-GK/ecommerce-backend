@@ -2,6 +2,7 @@ package helpers
 
 import "encoding/json"
 
+// decoding json
 func DecodeJson(data []byte, decodedjson any) {
 	var err = json.Unmarshal(data, &decodedjson)
 	if err != nil {
@@ -9,6 +10,7 @@ func DecodeJson(data []byte, decodedjson any) {
 	}
 }
 
+// encoding to json
 func EncodeJson(data any) []byte {
 	json, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {

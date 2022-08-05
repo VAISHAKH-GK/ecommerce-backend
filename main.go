@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/VAISHAKH-GK/ecommerce-backend/model"
+	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/router"
 	"github.com/rs/cors"
 )
@@ -11,9 +11,9 @@ import (
 func main() {
 	const port = ":9000"
 
-  // starting http server
+	// starting http server
 	http.ListenAndServe(port, cors.AllowAll().Handler(router.Router()))
-  
-  // disconnecting from mongodb
-	defer model.Client.Disconnect(model.Ctx)
+
+	// disconnecting from mongodb
+	defer databaseConnection.Client.Disconnect(databaseConnection.Ctx)
 }

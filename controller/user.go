@@ -4,12 +4,12 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
-	"github.com/VAISHAKH-GK/ecommerce-backend/model"
 )
 
-var db = model.Db
-var ctx = model.Ctx
+var db = databaseConnection.Db
+var ctx = databaseConnection.Ctx
 
 // post request on /api/user/signup
 func UserSignUpRoute(w http.ResponseWriter, r *http.Request) {
