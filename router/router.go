@@ -17,6 +17,7 @@ func Router() *mux.Router {
 
 	//admin routes
 	router.HandleFunc("/api/admin/login", controller.AdminLoginRoute).Methods("POST")
+	router.HandleFunc("/api/admin/addadmin", controller.AddAdminUser).Methods("POST")
 
 	return router
 }

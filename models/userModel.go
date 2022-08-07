@@ -11,5 +11,5 @@ type User struct {
 
 type AdminUser struct {
 	UserName string `json:"userName" bson:"userName"`
-	Password string `json:"password"  bson:"password"`
+	Password string `json:"-"  bson:"password"`
 }
