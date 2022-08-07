@@ -3,8 +3,8 @@ package helpers
 import "encoding/json"
 
 // decoding json
-func DecodeJson(data []byte, decodedjson any) {
-	var err = json.Unmarshal(data, &decodedjson)
+func DecodeJson(data []byte, decodedJson any) {
+	var err = json.Unmarshal(data, decodedJson)
 	if err != nil {
 		panic(err)
 	}

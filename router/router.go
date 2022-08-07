@@ -7,13 +7,16 @@ import (
 
 func Router() *mux.Router {
 	var router = mux.NewRouter()
-  
-  // test route
+
+	// test route
 	router.HandleFunc("/api/test", controller.TestRouter)
-  
-  // user routes
+
+	// user routes
 	router.HandleFunc("/api/user/signup", controller.UserSignUpRoute).Methods("POST")
 	router.HandleFunc("/api/user/login", controller.UserLoginRoute).Methods("POST")
+
+	//admin routes
+	router.HandleFunc("/api/admin/login", controller.AdminLoginRoute).Methods("POST")
 
 	return router
 }
