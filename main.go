@@ -11,10 +11,10 @@ import (
 func main() {
 	const port = ":9000"
 
-  c := cors.New(cors.Options{
-    AllowedOrigins: []string{"http://localhost:3000"},
-    AllowCredentials: true,
-  })
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"},
+		AllowCredentials: true,
+	})
 
 	// starting http server
 	http.ListenAndServe(port, c.Handler(router.Router()))
