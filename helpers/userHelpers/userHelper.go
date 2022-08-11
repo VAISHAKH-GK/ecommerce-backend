@@ -32,7 +32,7 @@ func DoUserSignUp(body []byte) []byte {
 }
 
 // user login
-func DoUserLogin(body []byte) []byte {
+func DoUserLogin(body []byte) ([]byte, primitive.ObjectID) {
 	var data map[string]interface{}
 	// decoding request body
 	helpers.DecodeJson(body, &data)
@@ -44,10 +44,12 @@ func DoUserLogin(body []byte) []byte {
 	// sending response login failed
 	if !status {
 		var res = helpers.EncodeJson(map[string]interface{}{"status": status, "reason": "Login Falied"})
-		return res
+		var userId primitive.ObjectID
+		return res, userId
 	}
 	// sending response if login successfull
-	var res = helpers.EncodeJson(map[string]interface{}{"status": status, "user": user})
-	return res
+	var res = helpers.EncodeJson(map[string]interface{}{"status": status})
+	var userId primitive.ObjectID = user.Id
+	return res, userId
 
 }
