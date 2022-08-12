@@ -15,7 +15,7 @@ func AdminLoginRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-func AddAdminUser(w http.ResponseWriter, r *http.Request) {
+func AddAdminRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = ioutil.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
 	var res = adminHelpers.CreateAdminUser(body)

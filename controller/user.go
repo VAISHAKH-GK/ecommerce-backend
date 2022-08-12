@@ -1,14 +1,12 @@
 package controller
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/userHelpers"
 	"github.com/gorilla/sessions"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // post request on /api/user/signup
@@ -34,18 +32,10 @@ func UserLoginRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 // request on /api/user/checklogin
-func CheckLogin(w http.ResponseWriter, r *http.Request) {
+func CheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	session, err := store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
-	fmt.Println(session.Values)
-	if userId != primitive.NilObjectID {
-		fmt.Println(userId)
-		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
-		w.Write(res)
-	} else {
-		var res = helpers.EncodeJson(map[string]interface{}{"status": false})
-		w.Write(res)
-	}
+	var res = userHelpers.CheckUserLogin(session)
+	w.Write(res)
 }

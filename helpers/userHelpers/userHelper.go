@@ -4,6 +4,7 @@ import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
+	"github.com/gorilla/sessions"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -51,5 +52,20 @@ func DoUserLogin(body []byte) ([]byte, primitive.ObjectID) {
 	var res = helpers.EncodeJson(map[string]interface{}{"status": status})
 	var userId primitive.ObjectID = user.Id
 	return res, userId
+}
 
+// checking if user already logedIn
+func CheckUserLogin(session *sessions.Session) []byte {
+	// getting userId from session
+	var userId = session.Values["userId"]
+	// checking if userId is nil
+	if userId != nil {
+		// creating response and returning
+		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+		return res
+	} else {
+		// creating response and returning
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false})
+		return res
+	}
 }

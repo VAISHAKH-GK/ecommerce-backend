@@ -14,11 +14,11 @@ func Router() *mux.Router {
 	// user routes
 	router.HandleFunc("/api/user/signup", controller.UserSignUpRoute).Methods("POST")
 	router.HandleFunc("/api/user/login", controller.UserLoginRoute).Methods("POST")
-  router.HandleFunc("/api/user/checklogin",controller.CheckLogin)
+	router.HandleFunc("/api/user/checklogin", controller.CheckLoginRoute).Methods("GET", "POST", "PUT", "PATCH")
 
 	//admin routes
 	router.HandleFunc("/api/admin/login", controller.AdminLoginRoute).Methods("POST")
-	router.HandleFunc("/api/admin/addadmin", controller.AddAdminUser).Methods("POST")
+	router.HandleFunc("/api/admin/addadmin", controller.AddAdminRoute).Methods("POST")
 
 	return router
 }
