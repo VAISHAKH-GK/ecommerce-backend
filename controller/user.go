@@ -39,3 +39,11 @@ func CheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var res = userHelpers.CheckUserLogin(session)
 	w.Write(res)
 }
+
+func GetUserDataRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	session, err := store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	var res = userHelpers.GetUserData(session)
+	w.Write(res)
+}

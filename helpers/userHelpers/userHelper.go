@@ -69,3 +69,12 @@ func CheckUserLogin(session *sessions.Session) []byte {
 		return res
 	}
 }
+
+func GetUserData(session *sessions.Session) []byte {
+	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	helpers.CheckNilErr(err)
+	var user models.User
+	getUserById(userId, &user)
+	var res = helpers.EncodeJson(user)
+	return res
+}
