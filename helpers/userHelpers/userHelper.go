@@ -57,9 +57,9 @@ func DoUserLogin(body []byte) ([]byte, primitive.ObjectID) {
 // checking if user already logedIn
 func CheckUserLogin(session *sessions.Session) []byte {
 	// getting userId from session
-	var userId = session.Values["userId"]
+	var isLoggedIn = session.Values["isLoggedIn"]
 	// checking if userId is nil
-	if userId != nil {
+	if isLoggedIn == true{
 		// creating response and returning
 		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 		return res

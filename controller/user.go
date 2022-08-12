@@ -26,6 +26,7 @@ func UserLoginRoute(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "user")
 	helpers.CheckNilErr(err)
 	session.Values["userId"] = userId.Hex()
+	session.Values["isLoggedIn"] = true
 	err = session.Save(r, w)
 	helpers.CheckNilErr(err)
 	w.Write(res)
