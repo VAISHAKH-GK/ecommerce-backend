@@ -71,6 +71,11 @@ func CheckUserLogin(session *sessions.Session) []byte {
 }
 
 func GetUserData(session *sessions.Session) []byte {
+  var id = session.Values["userId"]
+  if id == nil {
+    var res = helpers.EncodeJson(false)
+    return res
+  }
 	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
 	helpers.CheckNilErr(err)
 	var user models.User
