@@ -18,7 +18,7 @@ func AdminLoginRoute(w http.ResponseWriter, r *http.Request) {
 	session, err := store.Get(r, "admin")
 	helpers.CheckNilErr(err)
 	session.Options.MaxAge = oneMinute
-	session.Values["adminUserId"] = userId.Hex()
+	session.Values["userId"] = userId.Hex()
 	session.Values["isLoggedIn"] = true
 	err = session.Save(r, w)
 	helpers.CheckNilErr(err)
@@ -37,5 +37,13 @@ func AdminCheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var session, err = store.Get(r, "admin")
 	helpers.CheckNilErr(err)
 	var res = adminHelpers.CheckUserLogin(session)
+	w.Write(res)
+}
+
+func AdminGetUserDataRotue(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	session, err := store.Get(r, "admin")
+	helpers.CheckNilErr(err)
+	var res = adminHelpers.GetAdminUserData(session)
 	w.Write(res)
 }

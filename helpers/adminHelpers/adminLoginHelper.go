@@ -1,14 +1,10 @@
 package adminHelpers
 
 import (
-	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"go.mongodb.org/mongo-driver/bson"
 	"golang.org/x/crypto/bcrypt"
 )
-
-var db = databaseConnection.Db
-var ctx = databaseConnection.Ctx
 
 func GetAdminUser(userName string, adminUser *models.AdminUser) {
 	db.Collection("admin").FindOne(ctx, bson.M{"userName": userName}).Decode(adminUser)

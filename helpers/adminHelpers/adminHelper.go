@@ -3,11 +3,15 @@ package adminHelpers
 import (
 	"encoding/json"
 
+	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
+
+var db = databaseConnection.Db
+var ctx = databaseConnection.Ctx
 
 func DoAdminLogin(body []byte) ([]byte, primitive.ObjectID) {
 	var data map[string]interface{}
@@ -57,3 +61,17 @@ func CheckUserLogin(session *sessions.Session) []byte {
 		return res
 	}
 }
+func GetAdminUserData(session *sessions.Session) []byte {
+	var id = session.Values["userId"]
+	if id == nil {
+		var res = helpers.EncodeJson(false)
+		return res
+	}
+	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	helpers.CheckNilErr(err)
+	var adminUser models.AdminUser
+	getUserById(userId, &adminUser)
+	var res = helpers.EncodeJson(adminUser)
+	return res
+}
+
