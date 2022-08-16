@@ -5,25 +5,38 @@ import (
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func DoAdminLogin(body []byte) []byte {
+func DoAdminLogin(body []byte) ([]byte, primitive.ObjectID) {
 	var data map[string]interface{}
+	// decoding request body
 	helpers.DecodeJson(body, &data)
-  var adminUser models.AdminUser
-	GetAdminUser(data["userName"].(string),&adminUser)
-	var res = ComparePassword(adminUser.Password, data["password"].(string))
-	return res
+	var user models.AdminUser
+	// getting user using email
+	GetAdminUser(data["userName"].(string), &user)
+	// checking if password is correct
+	var status = checkPassword(user.Password, data["password"].(string))
+	// sending response login failed
+	if !status {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": status, "reason": "Login Falied"})
+		var userId primitive.ObjectID
+		return res, userId
+	}
+	// sending response if login successfull
+	var res = helpers.EncodeJson(map[string]interface{}{"status": status})
+	var userId primitive.ObjectID = user.Id
+	return res, userId
 }
 
 func CreateAdminUser(body []byte) []byte {
-  var data map[string]interface{}
-  helpers.DecodeJson(body,&data)
-  var hashedPassowrd = hashPassword(data["password"])
-  data["password"] = hashedPassowrd
-  var insertedId = insertUser(data)
-  var response = map[string]interface{}{"status":true,"id":insertedId}
-  var res,err = json.Marshal(response)
-  helpers.CheckNilErr(err)
-  return res
+	var data map[string]interface{}
+	helpers.DecodeJson(body, &data)
+	var hashedPassowrd = hashPassword(data["password"])
+	data["password"] = hashedPassowrd
+	var insertedId = insertUser(data)
+	var response = map[string]interface{}{"status": true, "id": insertedId}
+	var res, err = json.Marshal(response)
+	helpers.CheckNilErr(err)
+	return res
 }

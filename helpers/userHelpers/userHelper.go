@@ -59,7 +59,7 @@ func CheckUserLogin(session *sessions.Session) []byte {
 	// getting userId from session
 	var isLoggedIn = session.Values["isLoggedIn"]
 	// checking if userId is nil
-	if isLoggedIn == true{
+	if isLoggedIn == true {
 		// creating response and returning
 		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 		return res
@@ -71,11 +71,11 @@ func CheckUserLogin(session *sessions.Session) []byte {
 }
 
 func GetUserData(session *sessions.Session) []byte {
-  var id = session.Values["userId"]
-  if id == nil {
-    var res = helpers.EncodeJson(false)
-    return res
-  }
+	var id = session.Values["userId"]
+	if id == nil {
+		var res = helpers.EncodeJson(false)
+		return res
+	}
 	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
 	helpers.CheckNilErr(err)
 	var user models.User

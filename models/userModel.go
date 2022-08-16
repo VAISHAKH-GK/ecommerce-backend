@@ -10,6 +10,8 @@ type User struct {
 }
 
 type AdminUser struct {
-	UserName string `json:"userName" bson:"userName"`
-	Password string `json:"-"  bson:"password"`
+	Id         primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	UserName   string             `json:"userName" bson:"userName"`
+	Password   string             `json:"-"  bson:"password"`
+	SuperAdmin bool               `json:"superAdmin" bson:"superAdmin"`
 }
