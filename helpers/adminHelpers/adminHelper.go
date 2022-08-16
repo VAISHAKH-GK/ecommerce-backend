@@ -5,6 +5,7 @@ import (
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
+	"github.com/gorilla/sessions"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -39,4 +40,20 @@ func CreateAdminUser(body []byte) []byte {
 	var res, err = json.Marshal(response)
 	helpers.CheckNilErr(err)
 	return res
+}
+
+// checking if user already logedIn
+func CheckUserLogin(session *sessions.Session) []byte {
+	// getting userId from session
+	var isLoggedIn = session.Values["isLoggedIn"]
+	// checking if userId is nil
+	if isLoggedIn == true {
+		// creating response and returning
+		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+		return res
+	} else {
+		// creating response and returning
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false})
+		return res
+	}
 }

@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
@@ -11,7 +11,7 @@ import (
 
 // post request on /api/user/signup
 func UserSignUpRoute(w http.ResponseWriter, r *http.Request) {
-	var body, err = ioutil.ReadAll(r.Body)
+	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
 	var res = userHelpers.DoUserSignUp(body)
 	w.Write(res)
@@ -20,7 +20,7 @@ func UserSignUpRoute(w http.ResponseWriter, r *http.Request) {
 // post request on /api/user/login
 func UserLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
-	var body, err = ioutil.ReadAll(r.Body)
+	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
 	var res, userId = userHelpers.DoUserLogin(body)
 	const oneMinute = 60 * 1
