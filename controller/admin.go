@@ -47,3 +47,13 @@ func AdminGetUserDataRotue(w http.ResponseWriter, r *http.Request) {
 	var res = adminHelpers.GetAdminUserData(session)
 	w.Write(res)
 }
+
+func AdminLogoutRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var sesssion, err = store.Get(r, "admin")
+	helpers.CheckNilErr(err)
+	sesssion.Options.MaxAge = -1
+	sesssion.Save(r, w)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	w.Write(res)
+}
