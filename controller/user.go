@@ -50,3 +50,13 @@ func GetUserDataRoute(w http.ResponseWriter, r *http.Request) {
 	var res = userHelpers.GetUserData(session)
 	w.Write(res)
 }
+
+func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	session.Options.MaxAge = -1
+	session.Save(r, w)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	w.Write(res)
+}
