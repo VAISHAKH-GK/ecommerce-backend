@@ -74,4 +74,3 @@ func GetAdminUserData(session *sessions.Session) []byte {
 	var res = helpers.EncodeJson(adminUser)
 	return res
 }
-

@@ -6,6 +6,7 @@ import (
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/adminHelpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/gorilla/sessions"
 )
 
@@ -55,5 +56,12 @@ func AdminLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	sesssion.Options.MaxAge = -1
 	sesssion.Save(r, w)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	w.Write(res)
+}
+
+func AddProductRoute(w http.ResponseWriter, r *http.Request) {
+	var body, err = io.ReadAll(r.Body)
+	helpers.CheckNilErr(err)
+	var res = productHelpers.AddNewProduct(body)
 	w.Write(res)
 }
