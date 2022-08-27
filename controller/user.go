@@ -43,6 +43,7 @@ func CheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/user/getuser
 func GetUserDataRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	session, err := store.Get(r, "user")
@@ -51,6 +52,7 @@ func GetUserDataRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request one /api/user/logout
 func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")

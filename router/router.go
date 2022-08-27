@@ -22,6 +22,7 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/admin/getuser", controller.AdminGetUserDataRotue).Methods("GET")
 	router.HandleFunc("/api/admin/logout", controller.AdminLogoutRoute).Methods("GET")
 	router.HandleFunc("/api/admin/addproduct", controller.AddProductRoute).Methods("POST")
+	router.HandleFunc("/api/admin/addproductimage", controller.AddProductImage).Methods("POST")
 
 	return router
 }

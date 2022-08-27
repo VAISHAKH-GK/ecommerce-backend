@@ -1,13 +1,14 @@
 package controller
 
 import (
-	"io"
-	"net/http"
-
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/adminHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
+	"io"
+	"io/ioutil"
+	"net/http"
 )
 
 func AdminLoginRoute(w http.ResponseWriter, r *http.Request) {
@@ -62,6 +63,17 @@ func AdminLogoutRoute(w http.ResponseWriter, r *http.Request) {
 func AddProductRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
-	var res = productHelpers.AddNewProduct(body)
+	var data models.Product
+	helpers.DecodeJson(body, &data)
+	var res = productHelpers.AddNewProduct(data)
+	w.Write(res)
+}
+
+func AddProductImage(w http.ResponseWriter, r *http.Request) {
+	var body, err = io.ReadAll(r.Body)
+	var id = r.URL.Query().Get("id")
+	helpers.CheckNilErr(err)
+	ioutil.WriteFile("public/images/"+id+".jpg", body, 0666)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	w.Write(res)
 }

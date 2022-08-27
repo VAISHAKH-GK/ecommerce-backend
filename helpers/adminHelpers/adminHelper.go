@@ -61,6 +61,7 @@ func CheckUserLogin(session *sessions.Session) []byte {
 		return res
 	}
 }
+
 func GetAdminUserData(session *sessions.Session) []byte {
 	var id = session.Values["userId"]
 	if id == nil {
