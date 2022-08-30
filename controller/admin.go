@@ -4,7 +4,6 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/adminHelpers"
@@ -77,12 +76,5 @@ func AddProductImageRoute(w http.ResponseWriter, r *http.Request) {
 	helpers.CheckNilErr(err)
 	ioutil.WriteFile("public/images/"+id+".jpg", body, 0666)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
-	w.Write(res)
-}
-
-func GetProductsRoute(w http.ResponseWriter, r *http.Request) {
-	var numberOfProducts, err = strconv.Atoi(r.URL.Query().Get("number"))
-	helpers.CheckNilErr(err)
-	var res = productHelpers.GetAllProducts(numberOfProducts)
 	w.Write(res)
 }

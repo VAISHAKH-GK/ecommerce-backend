@@ -23,10 +23,10 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/admin/logout", controller.AdminLogoutRoute).Methods("GET")
 	router.HandleFunc("/api/admin/addproduct", controller.AddProductRoute).Methods("POST")
 	router.HandleFunc("/api/admin/addproductimage", controller.AddProductImageRoute).Methods("POST")
-	router.HandleFunc("/api/admin/getproducts", controller.GetProductsRoute).Methods("GET")
 
 	//public routes
-	router.HandleFunc("/public/displayimage", controller.DisplayImageRotue).Methods("GET")
+	router.HandleFunc("/api/public/getproducts", controller.GetProductsRoute).Methods("GET")
+	router.HandleFunc("/api/public/getproductimage", controller.GetProductImageRotue).Methods("GET")
 
 	return router
 }
