@@ -17,6 +17,6 @@ func AddNewProduct(product models.Product) []byte {
 
 func GetAllProducts(numberOfProducts int) []byte {
 	var products = getProducts(numberOfProducts)
-	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "products": products})
+	var res = helpers.EncodeJson(products)
 	return res
 }
