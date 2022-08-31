@@ -16,6 +16,14 @@ func AddNewProduct(product models.Product) []byte {
 	return res
 }
 
+func EditProduct(product models.Product,id string) []byte {
+  var objectId,err = primitive.ObjectIDFromHex(id)
+  helpers.CheckNilErr(err)
+  var status = updateProduct(product,objectId) 
+  var res = helpers.EncodeJson(map[string]interface{}{"status":status})
+  return res
+}
+
 func GetAllProducts(numberOfProducts int) []byte {
 	var products = getProducts(numberOfProducts)
 	var res = helpers.EncodeJson(products)

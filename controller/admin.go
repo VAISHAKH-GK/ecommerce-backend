@@ -78,3 +78,13 @@ func AddProductImageRoute(w http.ResponseWriter, r *http.Request) {
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	w.Write(res)
 }
+
+func EditProductRoute(w http.ResponseWriter, r *http.Request) {
+	var body, err = io.ReadAll(r.Body)
+	var id = r.URL.Query().Get("id")
+	helpers.CheckNilErr(err)
+	var product models.Product
+	helpers.DecodeJson(body, &product)
+	var res = productHelpers.EditProduct(product, id)
+	w.Write(res)
+}
