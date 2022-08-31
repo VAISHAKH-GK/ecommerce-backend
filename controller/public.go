@@ -16,6 +16,12 @@ func GetProductsRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+func GetProductRoute(w http.ResponseWriter, r *http.Request) {
+  var id = r.URL.Query().Get("id")
+	var res = productHelpers.GetOneProduct(id)
+	w.Write(res)
+}
+
 func GetProductImageRotue(w http.ResponseWriter, r *http.Request) {
 	var id = r.URL.Query().Get("id")
 	var image, err = ioutil.ReadFile("public/images/" + id + ".jpg")

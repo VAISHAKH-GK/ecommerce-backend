@@ -23,10 +23,10 @@ func UserLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
 	var res, userId = userHelpers.DoUserLogin(body)
-	const oneMinute = 60 * 1
+	const twentyMinute = 60 * 1 * 20
 	session, err := store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	session.Options.MaxAge = oneMinute
+	session.Options.MaxAge = twentyMinute 
 	session.Values["userId"] = userId.Hex()
 	session.Values["isLoggedIn"] = true
 	err = session.Save(r, w)

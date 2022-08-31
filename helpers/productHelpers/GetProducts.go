@@ -2,7 +2,9 @@ package productHelpers
 
 import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func getProducts(numberOfProducts int) []map[string]interface{} {
@@ -20,4 +22,10 @@ func getProducts(numberOfProducts int) []map[string]interface{} {
 		}
 	}
 	return products
+}
+
+func getProduct(id primitive.ObjectID) models.Product {
+	var product models.Product
+	db.Collection("product").FindOne(ctx, bson.M{"_id": id}).Decode(&product)
+	return product
 }
