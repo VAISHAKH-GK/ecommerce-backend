@@ -4,6 +4,7 @@ import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -36,4 +37,12 @@ func GetOneProduct(id string) []byte {
 	var product = getProduct(objectId)
 	var res = helpers.EncodeJson(product)
 	return res
+}
+
+func DeleteProduct(id string) []byte {
+  var objectId,err = primitive.ObjectIDFromHex(id)
+  helpers.CheckNilErr(err)
+  db.Collection("product").DeleteOne(ctx,bson.M{"_id":objectId})
+  var res = helpers.EncodeJson(map[string]interface{}{"status":true})
+  return res
 }

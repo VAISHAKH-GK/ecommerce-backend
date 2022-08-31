@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"os"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/adminHelpers"
@@ -86,5 +87,12 @@ func EditProductRoute(w http.ResponseWriter, r *http.Request) {
 	var product models.Product
 	helpers.DecodeJson(body, &product)
 	var res = productHelpers.EditProduct(product, id)
+	w.Write(res)
+}
+
+func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+	var id = r.URL.Query().Get("id")
+	var res = productHelpers.DeleteProduct(id)
+	os.Remove("public/images/" + id + ".jpg")
 	w.Write(res)
 }
