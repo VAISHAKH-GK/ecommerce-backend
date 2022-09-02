@@ -5,8 +5,10 @@ import (
 	"net/http"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/userHelpers"
 	"github.com/gorilla/sessions"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // post request on /api/user/signup
@@ -26,7 +28,7 @@ func UserLoginRoute(w http.ResponseWriter, r *http.Request) {
 	const twentyMinute = 60 * 1 * 20
 	session, err := store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	session.Options.MaxAge = twentyMinute 
+	session.Options.MaxAge = twentyMinute
 	session.Values["userId"] = userId.Hex()
 	session.Values["isLoggedIn"] = true
 	err = session.Save(r, w)
@@ -60,5 +62,17 @@ func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	session.Options.MaxAge = -1
 	session.Save(r, w)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	w.Write(res)
+}
+
+func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	var productId = r.URL.Query().Get("id")
+	helpers.CheckNilErr(err)
+	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	helpers.CheckNilErr(err)
+	var res = productHelpers.AddProductToCart(productId, userId)
 	w.Write(res)
 }

@@ -17,12 +17,12 @@ func AddNewProduct(product models.Product) []byte {
 	return res
 }
 
-func EditProduct(product models.Product,id string) []byte {
-  var objectId,err = primitive.ObjectIDFromHex(id)
-  helpers.CheckNilErr(err)
-  var status = updateProduct(product,objectId) 
-  var res = helpers.EncodeJson(map[string]interface{}{"status":status})
-  return res
+func EditProduct(product models.Product, id string) []byte {
+	var objectId, err = primitive.ObjectIDFromHex(id)
+	helpers.CheckNilErr(err)
+	var status = updateProduct(product, objectId)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": status})
+	return res
 }
 
 func GetAllProducts(numberOfProducts int) []byte {
@@ -40,9 +40,16 @@ func GetOneProduct(id string) []byte {
 }
 
 func DeleteProduct(id string) []byte {
-  var objectId,err = primitive.ObjectIDFromHex(id)
-  helpers.CheckNilErr(err)
-  db.Collection("product").DeleteOne(ctx,bson.M{"_id":objectId})
-  var res = helpers.EncodeJson(map[string]interface{}{"status":true})
-  return res
+	var objectId, err = primitive.ObjectIDFromHex(id)
+	helpers.CheckNilErr(err)
+	db.Collection("product").DeleteOne(ctx, bson.M{"_id": objectId})
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	return res
+}
+
+func AddProductToCart(productId string, userId primitive.ObjectID) []byte {
+	var _, err = db.Collection("user").UpdateOne(ctx, bson.M{"_id": userId}, bson.M{"$push": bson.M{"cart": productId}})
+	helpers.CheckNilErr(err)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	return res
 }

@@ -24,6 +24,8 @@ func DoUserSignUp(body []byte) []byte {
 	}
 	// hashing password
 	user["password"] = hashPassword(user["password"].(string))
+  // creating empty  cart
+	user["cart"] = []primitive.ObjectID{}
 	// inserting user into database
 	var insertedID = insertUser(user)
 	// response sending to user with user details
