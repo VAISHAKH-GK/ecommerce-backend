@@ -42,14 +42,22 @@ func GetOneProduct(id string) []byte {
 func DeleteProduct(id string) []byte {
 	var objectId, err = primitive.ObjectIDFromHex(id)
 	helpers.CheckNilErr(err)
-	db.Collection("product").DeleteOne(ctx, bson.M{"_id": objectId})
+	if _, err = db.Collection("product").DeleteOne(ctx, bson.M{"_id": objectId}); err != nil {
+		panic(err)
+	}
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
 }
 
-func AddProductToCart(productId string, userId primitive.ObjectID) []byte {
+func AddProductToCart(productId primitive.ObjectID, userId primitive.ObjectID) []byte {
 	var _, err = db.Collection("user").UpdateOne(ctx, bson.M{"_id": userId}, bson.M{"$push": bson.M{"cart": productId}})
 	helpers.CheckNilErr(err)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	return res
+}
+
+func GetCartProducts(userId primitive.ObjectID) []byte {
+	var products = getProdcutsFromCart(userId)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "products": products})
 	return res
 }

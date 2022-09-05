@@ -74,10 +74,25 @@ func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 		w.Write(res)
 		return
 	}
-	var productId = r.URL.Query().Get("id")
+  productId,err := primitive.ObjectIDFromHex(r.URL.Query().Get("id"))
 	helpers.CheckNilErr(err)
 	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
 	helpers.CheckNilErr(err)
 	var res = productHelpers.AddProductToCart(productId, userId)
 	w.Write(res)
+}
+
+func GetCartProductsRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	if session.Values["isLoggedIn"] != true {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not Logged In"})
+		w.Write(res)
+    return
+	}
+	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	helpers.CheckNilErr(err)
+	var res = productHelpers.GetCartProducts(userId)
+  w.Write(res)
 }
