@@ -9,6 +9,9 @@ import (
 func getProdcutsFromCart(userId primitive.ObjectID) primitive.A {
 	var cursor, err = db.Collection("user").Aggregate(ctx, []bson.M{
 		{
+			"$match": bson.M{"_id": userId},
+		},
+		{
 			"$lookup": bson.M{
 				"from":         "product",
 				"localField":   "cart",
