@@ -17,6 +17,7 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/user/logout", controller.UserLogoutRoute).Methods("GET")
 	router.HandleFunc("/api/user/addtocart", controller.AddToCartRoute).Methods("PATCH")
 	router.HandleFunc("/api/user/getcartproducts", controller.GetCartProductsRoute).Methods("GET")
+	router.HandleFunc("/api/user/removefromcart", controller.RemoveFromCartRoute).Methods("DELETE")
 
 	//admin routes
 	router.HandleFunc("/api/admin/login", controller.AdminLoginRoute).Methods("POST")

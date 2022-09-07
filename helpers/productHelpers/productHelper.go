@@ -60,3 +60,9 @@ func GetCartProducts(userId primitive.ObjectID) []byte {
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "products": products})
 	return res
 }
+
+func RemoveCartProduct(userId primitive.ObjectID, productId primitive.ObjectID) []byte {
+	db.Collection("cart").UpdateOne(ctx, bson.M{"userId": userId}, bson.M{"$pull": bson.M{"products": bson.M{"productId": productId}}})
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	return res
+}
