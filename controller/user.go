@@ -78,7 +78,14 @@ func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
 	helpers.CheckNilErr(err)
 	productId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("productId"))
-	quantity, err := strconv.Atoi(r.URL.Query().Get("quantity"))
+	count := r.URL.Query().Get("count")
+	var quantity int
+	if count == "" {
+		quantity = 1
+	} else {
+		quantity, err = strconv.Atoi(count)
+		helpers.CheckNilErr(err)
+	}
 	var product = map[string]interface{}{"productId": productId, "quantity": quantity}
 	var res = productHelpers.AddProductToCart(userId, product)
 	w.Write(res)
