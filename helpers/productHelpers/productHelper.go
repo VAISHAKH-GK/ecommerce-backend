@@ -49,9 +49,8 @@ func DeleteProduct(id string) []byte {
 	return res
 }
 
-func AddProductToCart(productId primitive.ObjectID, userId primitive.ObjectID) []byte {
-	var _, err = db.Collection("user").UpdateOne(ctx, bson.M{"_id": userId}, bson.M{"$push": bson.M{"cart": productId}})
-	helpers.CheckNilErr(err)
+func AddProductToCart(userId primitive.ObjectID, product map[string]interface{}) []byte {
+	addToCart(userId, product)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
 }

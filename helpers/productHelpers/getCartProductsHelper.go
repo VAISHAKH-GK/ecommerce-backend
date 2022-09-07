@@ -6,29 +6,41 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func getProdcutsFromCart(userId primitive.ObjectID) primitive.A {
-	var cursor, err = db.Collection("user").Aggregate(ctx, []bson.M{
+func getProdcutsFromCart(userId primitive.ObjectID) []map[string]interface{} {
+	var cursor, err = db.Collection("cart").Aggregate(ctx, []bson.M{
 		{
-			"$match": bson.M{"_id": userId},
+			"$match": bson.M{"userId": userId},
+		},
+		{
+			"$unwind": "$products",
+		},
+		{
+			"$project": bson.M{
+				"productId": "$products.productId",
+				"quantity":  "$products.quantity",
+			},
 		},
 		{
 			"$lookup": bson.M{
 				"from":         "product",
-				"localField":   "cart",
+				"localField":   "productId",
 				"foreignField": "_id",
-				"as":           "cartItems",
+				"as":           "product",
 			},
 		},
 		{
-			"$project": bson.M{"cartItems": 1, "_id": 0},
+			"$unwind": "$product",
+		},
+		{
+			"$project": bson.M{"product": 1, "quantity": 1, "_id": 0},
 		}})
 	helpers.CheckNilErr(err)
-	var products primitive.A
+	var products []map[string]interface{}
 	for cursor.Next(ctx) {
 		var product map[string]interface{}
 		var err = cursor.Decode(&product)
 		helpers.CheckNilErr(err)
-		products = product["cartItems"].(primitive.A)
+		products = append(products, product)
 	}
 	return products
 }
