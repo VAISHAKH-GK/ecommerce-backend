@@ -3,7 +3,6 @@ package controller
 import (
 	"io"
 	"net/http"
-	"strconv"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
@@ -70,23 +69,19 @@ func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	if session.Values["isLoggedIn"] != true {
-		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not Logged In"})
-		w.Write(res)
+	if !helpers.CheckLogin(session) {
+		w.Write(helpers.NotLoggedInResponse())
 		return
 	}
-	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	var userId = helpers.GetUserId(session)
+	body, err := io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
-	productId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("productId"))
+	var data map[string]interface{}
+	helpers.DecodeJson(body, &data)
+	var count = int(data["count"].(float64))
+	productId, err := primitive.ObjectIDFromHex(data["productId"].(string))
 	helpers.CheckNilErr(err)
-	count := r.URL.Query().Get("count")
-	var quantity = 1
-	if count != "" {
-		quantity, err = strconv.Atoi(count)
-		helpers.CheckNilErr(err)
-	}
-	var product = map[string]interface{}{"productId": productId, "quantity": quantity}
-	var res = productHelpers.AddProductToCart(userId, product, count)
+	var res = productHelpers.AddProductToCart(userId, productId, count)
 	w.Write(res)
 }
 

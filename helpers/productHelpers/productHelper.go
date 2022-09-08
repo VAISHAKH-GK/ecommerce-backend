@@ -49,8 +49,8 @@ func DeleteProduct(id string) []byte {
 	return res
 }
 
-func AddProductToCart(userId primitive.ObjectID, product map[string]interface{},count string) []byte {
-	addToCart(userId, product,count)
+func AddProductToCart(userId primitive.ObjectID, productId primitive.ObjectID,count int) []byte {
+	addToCart(userId, productId,count)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
 }
