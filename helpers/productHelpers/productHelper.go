@@ -49,8 +49,8 @@ func DeleteProduct(id string) []byte {
 	return res
 }
 
-func AddProductToCart(userId primitive.ObjectID, productId primitive.ObjectID,count int) []byte {
-	addToCart(userId, productId,count)
+func AddProductToCart(userId primitive.ObjectID, productId primitive.ObjectID, count int) []byte {
+	addToCart(userId, productId, count)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
 }
@@ -64,5 +64,11 @@ func GetCartProducts(userId primitive.ObjectID) []byte {
 func RemoveCartProduct(userId primitive.ObjectID, productId primitive.ObjectID) []byte {
 	db.Collection("cart").UpdateOne(ctx, bson.M{"userId": userId}, bson.M{"$pull": bson.M{"products": bson.M{"productId": productId}}})
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	return res
+}
+
+func GetTotalAmount(userId primitive.ObjectID) []byte {
+	var total = getTotalCartAmount(userId)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "total": total})
 	return res
 }

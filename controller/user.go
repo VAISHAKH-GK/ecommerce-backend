@@ -60,7 +60,8 @@ func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	var session, err = store.Get(r, "user")
 	helpers.CheckNilErr(err)
 	session.Options.MaxAge = -1
-	session.Save(r, w)
+	err = session.Save(r, w)
+	helpers.CheckNilErr(err)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	w.Write(res)
 }
@@ -69,11 +70,11 @@ func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	if !helpers.CheckLogin(session) {
-		w.Write(helpers.NotLoggedInResponse())
+	if !userHelpers.CheckLogin(session) {
+		w.Write(userHelpers.NotLoggedInResponse())
 		return
 	}
-	var userId = helpers.GetUserId(session)
+	var userId = userHelpers.GetUserId(session)
 	body, err := io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
 	var data map[string]interface{}
@@ -114,5 +115,16 @@ func RemoveFromCartRoute(w http.ResponseWriter, r *http.Request) {
 	productId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("productId"))
 	helpers.CheckNilErr(err)
 	var res = productHelpers.RemoveCartProduct(userId, productId)
+	w.Write(res)
+}
+
+func GetTotalPriceRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	userHelpers.CheckLogin(session)
+	userId, err := primitive.ObjectIDFromHex(session.Values["userId"].(string))
+	helpers.CheckNilErr(err)
+	var res = productHelpers.GetTotalAmount(userId)
 	w.Write(res)
 }

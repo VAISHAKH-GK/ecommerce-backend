@@ -85,3 +85,22 @@ func GetUserData(session *sessions.Session) []byte {
 	var res = helpers.EncodeJson(user)
 	return res
 }
+
+func CheckLogin(session *sessions.Session) bool {
+	if session.Values["isLoggedIn"] != true {
+		return false
+	} else {
+		return true
+	}
+}
+
+func GetUserId(session *sessions.Session) primitive.ObjectID {
+	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
+  helpers.CheckNilErr(err)
+  return userId
+}
+
+func NotLoggedInResponse() []byte {
+	var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not Logged In"})
+	return res
+}

@@ -9,14 +9,15 @@ func Router() *mux.Router {
 	var router = mux.NewRouter()
 
 	// user routes
-	router.HandleFunc("/api/user/signup", controller.UserSignUpRoute).Methods("POST")
-	router.HandleFunc("/api/user/login", controller.UserLoginRoute).Methods("POST")
 	router.HandleFunc("/api/user/checklogin", controller.CheckLoginRoute).Methods("GET")
 	router.HandleFunc("/api/user/getuser", controller.GetUserDataRoute).Methods("GET")
 	router.HandleFunc("/api/user/logout", controller.UserLogoutRoute).Methods("GET")
 	router.HandleFunc("/api/user/logout", controller.UserLogoutRoute).Methods("GET")
-	router.HandleFunc("/api/user/addtocart", controller.AddToCartRoute).Methods("PUT")
 	router.HandleFunc("/api/user/getcartproducts", controller.GetCartProductsRoute).Methods("GET")
+	router.HandleFunc("/api/user/gettotal", controller.GetTotalPriceRoute).Methods("GET")
+	router.HandleFunc("/api/user/signup", controller.UserSignUpRoute).Methods("POST")
+	router.HandleFunc("/api/user/login", controller.UserLoginRoute).Methods("POST")
+	router.HandleFunc("/api/user/addtocart", controller.AddToCartRoute).Methods("PUT")
 	router.HandleFunc("/api/user/removefromcart", controller.RemoveFromCartRoute).Methods("DELETE")
 
 	//admin routes
