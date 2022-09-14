@@ -68,7 +68,7 @@ func RemoveCartProduct(userId primitive.ObjectID, productId primitive.ObjectID) 
 }
 
 func GetTotalAmount(userId primitive.ObjectID) []byte {
-	var total = getTotalCartAmount(userId)
+	var total = GetTotalCartAmount(userId)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "total": total})
 	return res
 }

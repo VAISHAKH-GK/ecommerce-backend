@@ -45,7 +45,7 @@ func getProdcutsFromCart(userId primitive.ObjectID) []map[string]interface{} {
 	return products
 }
 
-func getTotalCartAmount(userId primitive.ObjectID) int {
+func GetTotalCartAmount(userId primitive.ObjectID) int {
 	var cursor, err = db.Collection("cart").Aggregate(ctx, []bson.M{
 		{
 			"$match": bson.M{"userId": userId},

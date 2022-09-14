@@ -1,8 +1,11 @@
 package userHelpers
 
 import (
+	"sync"
+
 	"github.com/VAISHAKH-GK/ecommerce-backend/databaseConnection"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -10,6 +13,8 @@ import (
 
 var db = databaseConnection.Db
 var ctx = databaseConnection.Ctx
+
+var waitGroup sync.WaitGroup
 
 // user singup
 func DoUserSignUp(body []byte) []byte {
@@ -24,8 +29,6 @@ func DoUserSignUp(body []byte) []byte {
 	}
 	// hashing password
 	user["password"] = hashPassword(user["password"].(string))
-  // creating empty  cart
-	user["cart"] = []primitive.ObjectID{}
 	// inserting user into database
 	var insertedID = insertUser(user)
 	// response sending to user with user details
@@ -96,11 +99,30 @@ func CheckLogin(session *sessions.Session) bool {
 
 func GetUserId(session *sessions.Session) primitive.ObjectID {
 	var userId, err = primitive.ObjectIDFromHex(session.Values["userId"].(string))
-  helpers.CheckNilErr(err)
-  return userId
+	helpers.CheckNilErr(err)
+	return userId
 }
 
 func NotLoggedInResponse() []byte {
 	var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not Logged In"})
+	return res
+}
+
+func PlaceOrder(order map[string]interface{}, userId primitive.ObjectID) []byte {
+	var products []map[string]interface{}
+	var total int
+	waitGroup.Add(2)
+	go func(products *[]map[string]interface{}) {
+		*products = getCartProducts(userId)
+		waitGroup.Done()
+	}(&products)
+	go func(total *int) {
+		*total = productHelpers.GetTotalCartAmount(userId)
+		waitGroup.Done()
+	}(&total)
+	waitGroup.Wait()
+	var orderDetails = createOrderDetails(order, userId, products, total)
+	addOrder(orderDetails)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
 }

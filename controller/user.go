@@ -128,3 +128,20 @@ func GetTotalPriceRoute(w http.ResponseWriter, r *http.Request) {
 	var res = productHelpers.GetTotalAmount(userId)
 	w.Write(res)
 }
+
+func PlaceOrderRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	if !userHelpers.CheckLogin(session) {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+		w.Write(res)
+	}
+	body, err := io.ReadAll(r.Body)
+	helpers.CheckNilErr(err)
+	var data map[string]interface{}
+	helpers.DecodeJson(body, &data)
+	var userId = userHelpers.GetUserId(session)
+	var res = userHelpers.PlaceOrder(data, userId)
+	w.Write(res)
+}
