@@ -1,12 +1,11 @@
 package userHelpers
 
 import (
-	"sync"
-
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"sync"
 )
 
 var w sync.WaitGroup
@@ -39,6 +38,7 @@ func createOrderDetails(order map[string]interface{}, userId primitive.ObjectID,
 		"products":      products,
 		"status":        status,
 		"total":         total,
+		"Date":          order["date"],
 	}
 	return orderDetails
 }

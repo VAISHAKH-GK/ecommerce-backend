@@ -145,3 +145,18 @@ func PlaceOrderRoute(w http.ResponseWriter, r *http.Request) {
 	var res = userHelpers.PlaceOrder(data, userId)
 	w.Write(res)
 }
+
+func GetOrdersRotue(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	if !userHelpers.CheckLogin(session) {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+    w.Write(res)
+    return
+	}
+  var userId = userHelpers.GetUserId(session)
+  var order = userHelpers.GetOrders(userId)
+  var res = helpers.EncodeJson(order)
+  w.Write(res)
+}
