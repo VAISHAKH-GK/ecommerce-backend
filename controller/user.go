@@ -152,11 +152,26 @@ func GetOrdersRotue(w http.ResponseWriter, r *http.Request) {
 	helpers.CheckNilErr(err)
 	if !userHelpers.CheckLogin(session) {
 		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
-    w.Write(res)
-    return
+		w.Write(res)
+		return
 	}
-  var userId = userHelpers.GetUserId(session)
-  var order = userHelpers.GetOrders(userId)
-  var res = helpers.EncodeJson(order)
-  w.Write(res)
+	var userId = userHelpers.GetUserId(session)
+	var order = userHelpers.GetOrders(userId)
+	var res = helpers.EncodeJson(order)
+	w.Write(res)
+}
+
+func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	if !userHelpers.CheckLogin(session) {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+		w.Write(res)
+		return
+	}
+	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
+  helpers.CheckNilErr(err)
+	var products = userHelpers.GetOrderProducts(orderId)
+	w.Write(helpers.EncodeJson(products))
 }

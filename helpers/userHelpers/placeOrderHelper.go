@@ -38,7 +38,7 @@ func createOrderDetails(order map[string]interface{}, userId primitive.ObjectID,
 		"products":      products,
 		"status":        status,
 		"total":         total,
-		"Date":          order["date"],
+		"date":          order["date"],
 	}
 	return orderDetails
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -125,4 +126,42 @@ func PlaceOrder(order map[string]interface{}, userId primitive.ObjectID) []byte 
 	addOrder(orderDetails)
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 	return res
+}
+
+func GetOrderProducts(orderId primitive.ObjectID) []map[string]interface{} {
+	var cursor, err = db.Collection("order").Aggregate(ctx, []bson.M{
+		{
+			"$match": bson.M{"_id": orderId},
+		},
+		{
+			"$unwind": "$products",
+		},
+		{
+			"$project": bson.M{
+				"productId": "$products.productId",
+				"quantity":  "$products.quantity",
+			},
+		},
+		{
+			"$lookup": bson.M{
+				"from":         "product",
+				"localField":   "productId",
+				"foreignField": "_id",
+				"as":           "product",
+			},
+		},
+		{
+			"$unwind": "$product",
+		},
+		{
+			"$project": bson.M{"product": 1, "quantity": 1, "_id": 0},
+		}})
+	helpers.CheckNilErr(err)
+	var products []map[string]interface{}
+	for cursor.Next(ctx) {
+		var product map[string]interface{}
+		cursor.Decode(&product)
+		products = append(products, product)
+	}
+	return products
 }
