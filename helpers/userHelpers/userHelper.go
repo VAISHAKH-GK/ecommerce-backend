@@ -123,9 +123,15 @@ func PlaceOrder(order map[string]interface{}, userId primitive.ObjectID) []byte 
 	}(&total)
 	waitGroup.Wait()
 	var orderDetails = createOrderDetails(order, userId, products, total)
-	addOrder(orderDetails)
-	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
-	return res
+	var orderId = adddOrder(orderDetails)
+	if order["paymentMethod"].(string) == "ONLINE" {
+		var orderData, key = createOnlineOrder(orderDetails, orderId)
+		var res = helpers.EncodeJson(map[string]interface{}{"status": "PENDING", "orderData": orderData, "key": key})
+		return res
+	} else {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": "DONE"})
+		return res
+	}
 }
 
 func GetOrderProducts(orderId primitive.ObjectID) []map[string]interface{} {
