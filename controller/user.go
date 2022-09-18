@@ -171,7 +171,23 @@ func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
-  helpers.CheckNilErr(err)
+	helpers.CheckNilErr(err)
 	var products = userHelpers.GetOrderProducts(orderId)
 	w.Write(helpers.EncodeJson(products))
+}
+
+func PaymentDoneRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "user")
+	helpers.CheckNilErr(err)
+	if userHelpers.CheckLogin(session) {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+		w.Write(res)
+		return
+	}
+	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
+	helpers.CheckNilErr(err)
+	userHelpers.ChangeOrderStatus(orderId)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
+	w.Write(res)
 }

@@ -171,3 +171,7 @@ func GetOrderProducts(orderId primitive.ObjectID) []map[string]interface{} {
 	}
 	return products
 }
+
+func ChangeOrderStatus(orderId primitive.ObjectID) {
+	db.Collection("order").UpdateOne(ctx, bson.M{"_id": orderId}, bson.M{"$set": bson.M{"status": "placed"}})
+}
