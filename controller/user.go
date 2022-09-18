@@ -180,7 +180,7 @@ func PaymentDoneRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
 	helpers.CheckNilErr(err)
-	if userHelpers.CheckLogin(session) {
+	if !userHelpers.CheckLogin(session) {
 		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
 		w.Write(res)
 		return
