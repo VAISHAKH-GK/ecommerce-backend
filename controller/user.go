@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
+	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/paymentHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/userHelpers"
 	"github.com/gorilla/sessions"
@@ -176,18 +177,19 @@ func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(helpers.EncodeJson(products))
 }
 
-func PaymentDoneRoute(w http.ResponseWriter, r *http.Request) {
-	var store = sessions.NewCookieStore([]byte("ecommerce"))
-	var session, err = store.Get(r, "user")
+func VerifyPaymentRoute(w http.ResponseWriter, r *http.Request) {
+	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
-	if !userHelpers.CheckLogin(session) {
-		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+	var data map[string]interface{}
+	helpers.DecodeJson(body, &data)
+	orderId, err := primitive.ObjectIDFromHex(data["orderId"].(string))
+	helpers.CheckNilErr(err)
+	if paymentHelpers.VerifyOnlinePayment(data["payment"].(map[string]interface{})) {
+		userHelpers.ChangeOrderStatus(orderId)
+		var res = helpers.EncodeJson(map[string]interface{}{"status": true})
 		w.Write(res)
 		return
 	}
-	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
-	helpers.CheckNilErr(err)
-	userHelpers.ChangeOrderStatus(orderId)
-	var res = helpers.EncodeJson(map[string]interface{}{"status": true})
-	w.Write(res)
+	var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Payment Not verified"})
+  w.Write(res)
 }
