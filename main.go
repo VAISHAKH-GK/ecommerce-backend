@@ -11,11 +11,14 @@ import (
 )
 
 func main() {
+  // declaring port
 	const port = ":9000"
 
+  // Getting Enviornment variables
   var err = godotenv.Load(".env")
   helpers.CheckNilErr(err)
 
+  // cors setup
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowCredentials: true,
@@ -26,5 +29,5 @@ func main() {
 	http.ListenAndServe(port, c.Handler(router.Router()))
 
 	// disconnecting from mongodb
-	defer databaseConnection.Client.Disconnect(databaseConnection.Ctx)
+  defer databaseConnection.Disconnect()
 }

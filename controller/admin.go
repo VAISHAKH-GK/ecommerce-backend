@@ -13,6 +13,7 @@ import (
 	"github.com/gorilla/sessions"
 )
 
+// post reqeust on /api/admin/login
 func AdminLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var body, err = io.ReadAll(r.Body)
@@ -29,6 +30,7 @@ func AdminLoginRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// post reqeust on /api/admin/addadmin
 func AddAdminRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
@@ -36,6 +38,7 @@ func AddAdminRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get reqeust on /api/admin/checklogin
 func AdminCheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "admin")
@@ -44,6 +47,7 @@ func AdminCheckLoginRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/admin/getuser
 func AdminGetUserDataRotue(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	session, err := store.Get(r, "admin")
@@ -52,6 +56,7 @@ func AdminGetUserDataRotue(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/admin/logout
 func AdminLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var sesssion, err = store.Get(r, "admin")
@@ -62,6 +67,7 @@ func AdminLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// post request on /api/admin/addproduct
 func AddProductRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
@@ -71,6 +77,7 @@ func AddProductRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// post request on /api/admin/addproductimage
 func AddProductImageRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	var id = r.URL.Query().Get("id")
@@ -80,6 +87,7 @@ func AddProductImageRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// put request on /api/admin/updateproduct
 func EditProductRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	var id = r.URL.Query().Get("id")
@@ -90,6 +98,7 @@ func EditProductRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// delete request on /api/admin/deleteproduct
 func DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	var id = r.URL.Query().Get("id")
 	var res = productHelpers.DeleteProduct(id)

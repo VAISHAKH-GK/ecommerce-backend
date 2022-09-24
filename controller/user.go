@@ -55,7 +55,7 @@ func GetUserDataRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
-// get request one /api/user/logout
+// get request on /api/user/logout
 func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -67,6 +67,7 @@ func UserLogoutRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// put request on route /api/user/addtocart
 func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -87,6 +88,7 @@ func AddToCartRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/user/getcartproducts
 func GetCartProductsRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -102,6 +104,7 @@ func GetCartProductsRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// delete request on /api/user/removefromcart
 func RemoveFromCartRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -119,6 +122,7 @@ func RemoveFromCartRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// getrequest on /api/user/gettotal
 func GetTotalPriceRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -130,6 +134,7 @@ func GetTotalPriceRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// post request on /api/usre/placeorder
 func PlaceOrderRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -147,6 +152,7 @@ func PlaceOrderRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/user/getorders
 func GetOrdersRotue(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -162,6 +168,7 @@ func GetOrdersRotue(w http.ResponseWriter, r *http.Request) {
 	w.Write(res)
 }
 
+// get request on /api/user/getorderproducts
 func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
@@ -177,6 +184,7 @@ func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(helpers.EncodeJson(products))
 }
 
+// post route on /api/user/verifypayment
 func VerifyPaymentRoute(w http.ResponseWriter, r *http.Request) {
 	var body, err = io.ReadAll(r.Body)
 	helpers.CheckNilErr(err)
@@ -191,5 +199,5 @@ func VerifyPaymentRoute(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Payment Not verified"})
-  w.Write(res)
+	w.Write(res)
 }
