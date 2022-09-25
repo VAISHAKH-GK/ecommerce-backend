@@ -17,7 +17,7 @@ func GetProductsRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetProductRoute(w http.ResponseWriter, r *http.Request) {
-  var id = r.URL.Query().Get("id")
+	var id = r.URL.Query().Get("id")
 	var res = productHelpers.GetOneProduct(id)
 	w.Write(res)
 }
@@ -30,4 +30,11 @@ func GetProductImageRotue(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "image/png")
 	w.Write(image)
+}
+
+func SearchProductRoute(w http.ResponseWriter, r *http.Request) {
+	var searchWord string = r.URL.Query().Get("search")
+	var products = productHelpers.SearchProducts(searchWord)
+	var res = helpers.EncodeJson(products)
+	w.Write(res)
 }

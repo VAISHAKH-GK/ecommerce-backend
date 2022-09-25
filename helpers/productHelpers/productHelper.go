@@ -72,3 +72,15 @@ func GetTotalAmount(userId primitive.ObjectID) []byte {
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "total": total})
 	return res
 }
+
+func SearchProducts(searchWord string) []models.Product {
+	var cursor, err = db.Collection("product").Find(ctx, bson.M{"$text": bson.M{"$search": searchWord}})
+	helpers.CheckNilErr(err)
+	var products []models.Product
+	for cursor.Next(ctx) {
+		var product models.Product
+		cursor.Decode(&product)
+		products = append(products, product)
+	}
+	return products
+}
