@@ -20,7 +20,7 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/user/removefromcart", controller.RemoveFromCartRoute).Methods("DELETE")
 	router.HandleFunc("/api/user/gettotal", controller.GetTotalPriceRoute).Methods("GET")
 	router.HandleFunc("/api/user/placeorder", controller.PlaceOrderRoute).Methods("POST")
-	router.HandleFunc("/api/user/getorders", controller.GetOrdersRotue).Methods("GET")
+	router.HandleFunc("/api/user/getorders", controller.GetUserOrdersRoute).Methods("GET")
 	router.HandleFunc("/api/user/getorderproducts", controller.GetOrderProductsRoute).Methods("GET")
 	router.HandleFunc("/api/user/verifypayment", controller.VerifyPaymentRoute).Methods("POST")
 
@@ -33,7 +33,9 @@ func Router() *mux.Router {
 	router.HandleFunc("/api/admin/addproduct", controller.AddProductRoute).Methods("POST")
 	router.HandleFunc("/api/admin/addproductimage", controller.AddProductImageRoute).Methods("POST")
 	router.HandleFunc("/api/admin/updateproduct", controller.EditProductRoute).Methods("PUT")
-	router.HandleFunc("/api/admin/deleteproduct", controller.DeleteProduct).Methods("DELETE")
+	router.HandleFunc("/api/admin/deleteproduct", controller.DeleteProductRoute).Methods("DELETE")
+	router.HandleFunc("/api/admin/getallorders", controller.GetAllOrdersRoute).Methods("GET")
+	router.HandleFunc("/api/admin/getorderproducts", controller.GetAdminOrderProductsRoute).Methods("GET")
 
 	//public routes
 	router.HandleFunc("/api/public/getproducts", controller.GetProductsRoute).Methods("GET")

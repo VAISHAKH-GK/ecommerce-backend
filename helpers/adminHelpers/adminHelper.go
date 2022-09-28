@@ -7,6 +7,7 @@ import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -74,4 +75,16 @@ func GetAdminUserData(session *sessions.Session) []byte {
 	getUserById(userId, &adminUser)
 	var res = helpers.EncodeJson(adminUser)
 	return res
+}
+
+func GetAllOrders() []map[string]interface{} {
+	var cursor, err = db.Collection("order").Find(ctx, bson.M{})
+	helpers.CheckNilErr(err)
+	var orders []map[string]interface{}
+	for cursor.Next(ctx) {
+		var order map[string]interface{}
+		cursor.Decode(&order)
+		orders = append(orders, order)
+	}
+	return orders
 }

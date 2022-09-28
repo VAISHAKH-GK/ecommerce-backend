@@ -11,6 +11,7 @@ import (
 	"github.com/VAISHAKH-GK/ecommerce-backend/helpers/productHelpers"
 	"github.com/VAISHAKH-GK/ecommerce-backend/models"
 	"github.com/gorilla/sessions"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 // post reqeust on /api/admin/login
@@ -99,9 +100,37 @@ func EditProductRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 // delete request on /api/admin/deleteproduct
-func DeleteProduct(w http.ResponseWriter, r *http.Request) {
+func DeleteProductRoute(w http.ResponseWriter, r *http.Request) {
 	var id = r.URL.Query().Get("id")
 	var res = productHelpers.DeleteProduct(id)
 	os.Remove("public/images/" + id + ".jpg")
 	w.Write(res)
 }
+
+func GetAllOrdersRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "admin")
+	helpers.CheckNilErr(err)
+	if session.Values["isLoggedIn"] != true {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "NotLoggedIn"})
+		w.Write(res)
+	}
+	var orders = adminHelpers.GetAllOrders()
+	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "orders": orders})
+	w.Write(res)
+}
+// get request on /api/user/getorderproducts
+func GetAdminOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "admin")
+	helpers.CheckNilErr(err)
+	if session.Values["isLoggedIn"] != true {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "NotLoggedIn"})
+		w.Write(res)
+	}
+	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
+	helpers.CheckNilErr(err)
+	var products = productHelpers.GetOrderProducts(orderId)
+	w.Write(helpers.EncodeJson(products))
+}
+

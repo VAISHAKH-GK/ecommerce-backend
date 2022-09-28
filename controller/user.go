@@ -153,7 +153,7 @@ func PlaceOrderRoute(w http.ResponseWriter, r *http.Request) {
 }
 
 // get request on /api/user/getorders
-func GetOrdersRotue(w http.ResponseWriter, r *http.Request) {
+func GetUserOrdersRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "user")
 	helpers.CheckNilErr(err)
@@ -180,7 +180,7 @@ func GetOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	}
 	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
 	helpers.CheckNilErr(err)
-	var products = userHelpers.GetOrderProducts(orderId)
+	var products = productHelpers.GetOrderProducts(orderId)
 	w.Write(helpers.EncodeJson(products))
 }
 
