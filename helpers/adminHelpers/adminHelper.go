@@ -88,3 +88,7 @@ func GetAllOrders() []map[string]interface{} {
 	}
 	return orders
 }
+
+func ChangeOrderStatus(orderId primitive.ObjectID, status string) {
+	db.Collection("order").UpdateOne(ctx, bson.M{"_id": orderId}, bson.M{"$set": bson.M{"status": status}})
+}

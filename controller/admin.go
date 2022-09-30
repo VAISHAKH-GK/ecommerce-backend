@@ -112,20 +112,21 @@ func GetAllOrdersRoute(w http.ResponseWriter, r *http.Request) {
 	var session, err = store.Get(r, "admin")
 	helpers.CheckNilErr(err)
 	if session.Values["isLoggedIn"] != true {
-		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "NotLoggedIn"})
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
 		w.Write(res)
 	}
 	var orders = adminHelpers.GetAllOrders()
 	var res = helpers.EncodeJson(map[string]interface{}{"status": true, "orders": orders})
 	w.Write(res)
 }
+
 // get request on /api/user/getorderproducts
 func GetAdminOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	var store = sessions.NewCookieStore([]byte("ecommerce"))
 	var session, err = store.Get(r, "admin")
 	helpers.CheckNilErr(err)
 	if session.Values["isLoggedIn"] != true {
-		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "NotLoggedIn"})
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
 		w.Write(res)
 	}
 	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
@@ -134,3 +135,16 @@ func GetAdminOrderProductsRoute(w http.ResponseWriter, r *http.Request) {
 	w.Write(helpers.EncodeJson(products))
 }
 
+func ChangeOrderStatusRoute(w http.ResponseWriter, r *http.Request) {
+	var store = sessions.NewCookieStore([]byte("ecommerce"))
+	var session, err = store.Get(r, "admin")
+	helpers.CheckNilErr(err)
+	if session.Values["isLoggedIn"] != true {
+		var res = helpers.EncodeJson(map[string]interface{}{"status": false, "reason": "Not LoggedIn"})
+		w.Write(res)
+		return
+	}
+	orderId, err := primitive.ObjectIDFromHex(r.URL.Query().Get("orderId"))
+	status := r.URL.Query().Get("status")
+  go adminHelpers.ChangeOrderStatus(orderId,status)
+}
